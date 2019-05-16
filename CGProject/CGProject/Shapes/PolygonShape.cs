@@ -10,15 +10,16 @@ using System.Threading.Tasks;
 
 namespace CGProject.Shapes
 {
+    [Serializable]
     public class PolygonShape : IDrawable, ITranslatable, IShape, ITransformable
     {
-        public ArrayList Points { get; set; }
+        public List<Point> Points { get; set; }
         public Color Color { get; set; }
         public Color BorderColor { get; set; }
         public int Opacity { get; set; }
         public MyMatrix AMatrix { get; set; }
 
-        public PolygonShape(ArrayList points, Color color, Color borderClr, int opacity)
+        public PolygonShape(List<Point> points, Color color, Color borderClr, int opacity)
         {
             this.Points = points;
             this.Color = color;

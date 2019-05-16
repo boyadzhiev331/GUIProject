@@ -10,14 +10,15 @@ using System.Threading.Tasks;
 
 namespace CGProject.Shapes
 {
+    [Serializable]
     public class CurveShape : IShape, IDrawable, ITranslatable, ITransformable
     {
-        public ArrayList Points { get; set; }
+        public List<Point> Points { get; set; }
         public Color Color { get; set; }
         public int Opacity { get; set; }
         public MyMatrix AMatrix { get; set; }
 
-        public CurveShape(ArrayList points, Color color, int opacity)
+        public CurveShape(List<Point> points, Color color, int opacity)
         {
             this.Points = points;
             this.Color = color;

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace CGProject.Shapes
 {
+    [Serializable]
     public abstract class BaseShape
     {
         public Size Size { get; set; }

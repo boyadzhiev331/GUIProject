@@ -16,8 +16,6 @@ namespace CGProject.Processors
         public int Operation { get; set; }
         public int ResizeRotateNumber { get; set; }
         public Point MousePosition { get; set; }
-        //public ArrayList Items { get; set; }
-        public ArrayList ItemsInGroup { get; set; }
         public IDrawable SelectedItem { get; set; }
         public ResizeRotateHandler ResizeRotate { get; set; }
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CGProject.Shapes
 {
+    [Serializable]
     public class LineShape : IDrawable, ITranslatable, IShape, ITransformable
     {
         public Point StartPoint { get; set; }

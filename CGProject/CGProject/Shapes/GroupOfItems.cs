@@ -10,15 +10,16 @@ using System.Threading.Tasks;
 
 namespace CGProject.Shapes
 {
+    [Serializable]
     public class GroupOfItems : IDrawable, ITranslatable, IShape
     {
-        public ArrayList Items { get; set; }
+        public List<IDrawable> Items { get; set; }
         public int Opacity { get; set; }
 
         public GroupOfItems(int opacity)
         {
             this.Opacity = opacity;
-            this.Items = new ArrayList();
+            this.Items = new List<IDrawable>();
         }
 
         public bool ContainsPoint(Point point)

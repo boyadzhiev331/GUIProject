@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CGProject.Shapes
 {
+    [Serializable]
     public class EllipseShape : BaseShape, IDrawable, IShape, ITranslatable, ITransformable
     {
         public Color BorderColor { get; set; }

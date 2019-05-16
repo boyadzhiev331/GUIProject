@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -111,7 +113,74 @@ namespace CGProject
                 breakBtn.Enabled = false;
             }
         }
+       
+        private bool ConvertPoints()
+        {
+            if (Points.Count > 1)
+            {
+                int i = 0;
+                PointsToConvert = new Point[Points.Count];
+                foreach (Point item in Points)
+                {
+                    PointsToConvert[i] = item;
+                    i++;
+                }
 
+                return true;
+            }
+            return false;
+        }
+
+        private void GetRectPoints(int X, int Y)
+        {
+            RectPoint1 = new Point(X, Y);
+            RectPoint2 = new Point(X, Y);
+
+            this.CustomRefresh();
+        }
+
+        public void ShapeDraw(int X, int Y)
+        {
+            Rectangle item;
+
+            RectPoint2.X = X;
+            RectPoint2.Y = Y;
+
+            this.CustomRefresh();
+            item = new Rectangle(Math.Min(RectPoint1.X, RectPoint2.X), Math.Min(RectPoint1.Y, RectPoint2.Y), Math.Max(RectPoint1.X, RectPoint2.X) - Math.Min(RectPoint1.X, RectPoint2.X), Math.Max(RectPoint1.Y, RectPoint2.Y) - Math.Min(RectPoint1.Y, RectPoint2.Y));
+            if (IsRectOrEll)
+            {
+                this.CreateGraphics().DrawRectangle(new Pen(Color.FromArgb(127, Color.Black)), item);
+            }
+            else
+            {
+                this.CreateGraphics().DrawEllipse(new Pen(Color.FromArgb(127, Color.Black)), item);
+            }
+        }
+
+        private bool IsInRange(Point point, Point center)
+        {
+            Rectangle item = new Rectangle(center, new Size(6, 6));
+            item.Offset(-3, -3);
+
+            return item.Contains(point);
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            graphicsProcessor.Draw(e.Graphics);
+
+            foreach (IDrawable item in Items)
+            {
+                item.Draw(e.Graphics);
+            }
+
+            if (this.ConvertPoints())
+            {
+                e.Graphics.DrawLines(new Pen(Color.Blue), PointsToConvert);
+            }
+        }
+        
         #region Buttons
         private void SelectBtn_Click(object sender, EventArgs e)
         {
@@ -194,75 +263,8 @@ namespace CGProject
         {
             FindItemToolStripMenuItem_Click(sender, e);
         }
-
         #endregion
-        private bool ConvertPoints()
-        {
-            if (Points.Count > 1)
-            {
-                int i = 0;
-                PointsToConvert = new Point[Points.Count];
-                foreach (Point item in Points)
-                {
-                    PointsToConvert[i] = item;
-                    i++;
-                }
-
-                return true;
-            }
-            return false;
-        }
-
-        private void GetRectPoints(int X, int Y)
-        {
-            RectPoint1 = new Point(X, Y);
-            RectPoint2 = new Point(X, Y);
-
-            this.CustomRefresh();
-        }
-
-        public void ShapeDraw(int X, int Y)
-        {
-            Rectangle item;
-
-            RectPoint2.X = X;
-            RectPoint2.Y = Y;
-
-            this.CustomRefresh();
-            item = new Rectangle(Math.Min(RectPoint1.X, RectPoint2.X), Math.Min(RectPoint1.Y, RectPoint2.Y), Math.Max(RectPoint1.X, RectPoint2.X) - Math.Min(RectPoint1.X, RectPoint2.X), Math.Max(RectPoint1.Y, RectPoint2.Y) - Math.Min(RectPoint1.Y, RectPoint2.Y));
-            if (IsRectOrEll)
-            {
-                this.CreateGraphics().DrawRectangle(new Pen(Color.FromArgb(127, Color.Black)), item);
-            }
-            else
-            {
-                this.CreateGraphics().DrawEllipse(new Pen(Color.FromArgb(127, Color.Black)), item);
-            }
-        }
-
-        private bool IsInRange(Point point, Point center)
-        {
-            Rectangle item = new Rectangle(center, new Size(6, 6));
-            item.Offset(-3, -3);
-
-            return item.Contains(point);
-        }
-
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-            graphicsProcessor.Draw(e.Graphics);
-
-            foreach (IDrawable item in Items)
-            {
-                item.Draw(e.Graphics);
-            }
-
-            if (this.ConvertPoints())
-            {
-                e.Graphics.DrawLines(new Pen(Color.Blue), PointsToConvert);
-            }
-        }
-
+        
         #region Mouse events
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -356,7 +358,7 @@ namespace CGProject
                         if ((Points.Count > 1) && (IsInRange(new Point(e.X, e.Y), PointsToConvert[0])))
                         {
                             Points.Add(new Point(PointsToConvert[0].X, PointsToConvert[0].Y));
-                            IDrawable item = new PolygonShape(new ArrayList(Points), Color.Transparent, Color.Black, 255);
+                            IDrawable item = new PolygonShape(new List<Point>(Points), Color.Transparent, Color.Black, 255);
                             Items.Add(item);
                             ToggleSelection = 1;
                             SelectedItem = item;
@@ -497,7 +499,7 @@ namespace CGProject
                         IDrawable item;
                         if (Points.Count > 1)
                         {
-                            item = new CurveShape(new ArrayList(Points), colorDialog1.Color, 255);
+                            item = new CurveShape(new List<Point>(Points), colorDialog1.Color, 255);
                             Items.Add(item);
                             ToggleSelection = 1;
                             SelectedItem = item;
@@ -519,19 +521,68 @@ namespace CGProject
         #region ToolStripMenu
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //saveFileDialog1.ShowDialog();
-
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
-            saveFileDialog1.Filter = "jpeg files (*.jpeg)|*.jpeg|png files (*.png)|*.png|img files (*.img)|*.img|All files (*.*)|*.*";
+            saveFileDialog1.Filter = "drawer files (*.drwr)|*.drwr";
+            saveFileDialog1.Title = "Save a Drawer file";
             saveFileDialog1.FilterIndex = 2;
-            saveFileDialog1.RestoreDirectory = true;
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                System.IO.StreamWriter file = new System.IO.StreamWriter(saveFileDialog1.FileName.ToString());
-                file.Close();
+                BinaryFormatter formatter = new BinaryFormatter();
+                FileStream stream = new FileStream(saveFileDialog1.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, Items);
+                stream.Close();
             }
+        }
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
+        }
+
+        private void OpenFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(openFileDialog1.FileName, FileMode.Open, FileAccess.Read, FileShare.None);
+            Items = (List<IDrawable>)formatter.Deserialize(stream);
+            foreach(IDrawable item in this.Items)
+            {
+                if (item.GetType().Name == "GroupOfItems")
+                {
+                    this.groupOfItems = (GroupOfItems)item;
+                }
+            }
+            stream.Close();
+
+            ToggleSelection = 1;
+            SelectedItem = null;
+            graphicsProcessor = new GraphicsProcessor(HelpSelectedItem);
+            saveFileDialog1.FileName = openFileDialog1.FileName;
+            this.CustomRefresh();
+        }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.FileName == String.Empty)
+            {
+                saveFileDialog1.ShowDialog();
+            }
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(saveFileDialog1.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+            formatter.Serialize(stream, Items);
+            stream.Close();
+        }
+
+        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Items = new List<IDrawable>();
+            this.SelectedItem = null;
+            this.groupOfItems = null;
+            graphicsProcessor = new GraphicsProcessor(HelpSelectedItem);
+            openFileDialog1.FileName = String.Empty;
+            saveFileDialog1.FileName = String.Empty;
+            this.CustomRefresh();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -541,13 +592,16 @@ namespace CGProject
 
         private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (SelectedItem != null && SelectedItem.GetType().Name != "GroupOfItems")
+            if (SelectedItem != null)
             {
-                copied = SelectedItem;
-            }
-            else if (SelectedItem.GetType().Name == "GroupOfItems")
-            {
-                MessageBox.Show("You cannot clone a group of items.");
+                if (SelectedItem.GetType().Name != "GroupOfItems")
+                {
+                    copied = SelectedItem;
+                }
+                else
+                {
+                    MessageBox.Show("You cannot clone a group of items.");
+                }
             }
         }
 
@@ -650,6 +704,21 @@ namespace CGProject
         {
             switch (e.KeyData.ToString())
             {
+                case "N, Control":
+                    {
+                        NewToolStripMenuItem_Click(sender, e);
+                        break;
+                    }
+                case "S, Control":
+                    {
+                        SaveToolStripMenuItem_Click(sender, e);
+                        break;
+                    }
+                case "S, Shift, Control":
+                    {
+                        SaveAsToolStripMenuItem_Click(sender, e);
+                        break;
+                    }
                 case "M":
                     {
                         colorDialog1.ShowDialog();

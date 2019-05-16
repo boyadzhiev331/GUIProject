@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CGProject.Shapes
 {
+    [Serializable]
     public class MyMatrix
     {
         public float A11 { get; set; }
