@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 namespace CGProject.Shapes
 {
     [Serializable]
-    public class EllipseShape : BaseShape, IDrawable, IShape, ITranslatable, ITransformable
+    public class EllipseShape : BaseShape, IDrawable, ITransformable
     {
         public Color BorderColor { get; set; }
-        public EllipseShape(Size size, Point location, Color color, Color borderColor, int opacity)
-            : base(size, location, color, opacity)
+        public EllipseShape(Size size, Point location, Color color, Color borderColor, int opacity, string name)
+            : base(size, location, color, opacity, name)
         {
             this.BorderColor = borderColor;
         }
@@ -198,9 +198,9 @@ namespace CGProject.Shapes
             return this.Opacity;
         }
 
-        public IDrawable CloneShape()
+        public ITransformable CloneShape()
         {
-            EllipseShape item = new EllipseShape(Size, Location, Color, BorderColor, Opacity);
+            EllipseShape item = new EllipseShape(Size, Location, Color, BorderColor, Opacity, Name);
 
             Matrix _Matrix = item.AMatrix.CreateMatrix();
             _Matrix.Multiply(this.AMatrix.CreateMatrix());

@@ -10,20 +10,22 @@ using System.Threading.Tasks;
 namespace CGProject.Shapes
 {
     [Serializable]
-    public class LineShape : IDrawable, ITranslatable, IShape, ITransformable
+    public class LineShape : IDrawable, ITransformable
     {
         public Point StartPoint { get; set; }
         public Point EndPoint { get; set; }
         public Color Color { get; set; }
         public int Opacity { get; set; }
+        public string Name { get; set; }
         public MyMatrix AMatrix { get; set; }
 
-        public LineShape(Point startPoint, Point endPoint, Color color, int opacity)
+        public LineShape(Point startPoint, Point endPoint, Color color, int opacity, string name)
         {
             this.StartPoint = startPoint;
             this.EndPoint = endPoint;
             this.Color = color;
             this.Opacity = opacity;
+            this.Name = name;
             this.AMatrix = new MyMatrix();
         }
 
@@ -205,9 +207,9 @@ namespace CGProject.Shapes
             return this.Opacity;
         }
 
-        public IDrawable CloneShape()
+        public ITransformable CloneShape()
         {
-            LineShape item = new LineShape(StartPoint, EndPoint, Color, Opacity);
+            LineShape item = new LineShape(StartPoint, EndPoint, Color, Opacity, Name);
 
             Matrix _Matrix = item.AMatrix.CreateMatrix();
             _Matrix.Multiply(this.AMatrix.CreateMatrix());

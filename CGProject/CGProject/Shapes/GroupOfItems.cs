@@ -11,15 +11,17 @@ using System.Threading.Tasks;
 namespace CGProject.Shapes
 {
     [Serializable]
-    public class GroupOfItems : IDrawable, ITranslatable, IShape
+    public class GroupOfItems : IDrawable, ITransformable 
     {
-        public List<IDrawable> Items { get; set; }
+        public List<ITransformable> Items { get; set; }
         public int Opacity { get; set; }
+        public string Name { get; set; }
 
-        public GroupOfItems(int opacity)
+        public GroupOfItems(int opacity, string name)
         {
             this.Opacity = opacity;
-            this.Items = new List<IDrawable>();
+            this.Name = name;
+            this.Items = new List<ITransformable>();
         }
 
         public bool ContainsPoint(Point point)
@@ -33,7 +35,7 @@ namespace CGProject.Shapes
 
         public void Translate(int dX, int dY)
         {
-            foreach (ITranslatable item in Items)
+            foreach (ITransformable item in Items)
             {
                 item.Translate(dX, dY);
             }
@@ -52,7 +54,7 @@ namespace CGProject.Shapes
             Point location = new Point(1000, 1000);
             Point size = new Point(0, 0);
 
-            foreach (IDrawable item in Items)
+            foreach (ITransformable item in Items)
             {
                 if (location.X > item.GetBounds().Location.X)
                 {
@@ -92,7 +94,7 @@ namespace CGProject.Shapes
 
         public void RotateShape(Point centerPoint, float angle)
         {
-            foreach (IDrawable item in Items)
+            foreach (ITransformable item in Items)
             {
                 item.RotateShape(centerPoint, angle);
             }
@@ -267,7 +269,12 @@ namespace CGProject.Shapes
             }
         }
 
-        public IDrawable CloneShape()
+        public ITransformable CloneShape()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Transform(Matrix matrix)
         {
             throw new NotImplementedException();
         }

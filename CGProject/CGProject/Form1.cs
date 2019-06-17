@@ -22,9 +22,9 @@ namespace CGProject
     {
         private Point point;
         public int ToggleSelection = -1;
-        private IDrawable HelpSelectedItem = null;
+        private ITransformable HelpSelectedItem = null;
         public IDrawable SelectedItem = null;
-        public List<IDrawable> Items = new List<IDrawable>();
+        public List<ITransformable> Items = new List<ITransformable>();
         public GroupOfItems groupOfItems;
         private List<Point> Points = new List<Point>();
         private Point[] PointsToConvert;
@@ -32,12 +32,13 @@ namespace CGProject
         public Point RectPoint1;
         public Point RectPoint2;
         private bool IsRectOrEll = false;
-        private IDrawable copied;
-        private FindItem findItemDialog = new FindItem();
-        private GroupItems groupItemsDialog = new GroupItems();
-        private CGProject.Dialogs.Help helpDialog = new CGProject.Dialogs.Help();
-        private Antonio aboutAntonio = new Antonio();
-        private Daniel aboutDaniel = new Daniel();
+        private ITransformable copied;
+        private readonly FindItem findItemDialog = new FindItem();
+        private  SetName setNameDialog = new SetName();
+        private readonly GroupItems groupItemsDialog = new GroupItems();
+        private readonly CGProject.Dialogs.Help helpDialog = new CGProject.Dialogs.Help();
+        private readonly Antonio aboutAntonioDialog = new Antonio();
+        private readonly Daniel aboutDanielDialog = new Daniel();
 
         public Form1()
         {
@@ -50,6 +51,7 @@ namespace CGProject
             KeyPreview = true;
             findItemDialog.form = this;
             groupItemsDialog.form = this;
+            setNameDialog.form = this;
             DoubleBuffered = true;
             this.CustomRefresh();
         }
@@ -67,6 +69,8 @@ namespace CGProject
                 {
                     copyBtn.Enabled = true;
                 }
+                nameTextBox.Enabled = true;
+                nameTextBox.Text = SelectedItem.Name;
             }
             else
             {
@@ -74,6 +78,8 @@ namespace CGProject
                 OpacityChangeBtn.Value = 0;
                 deleteBtn.Enabled = false;
                 copyBtn.Enabled = false;
+                nameTextBox.Enabled = false;
+                nameTextBox.Text = String.Empty;
             }
 
             if (this.Items.Count > 0)
@@ -84,7 +90,7 @@ namespace CGProject
             {
                 findItemBtn.Enabled = false;
             }
-            
+
             if (this.copied != null)
             {
                 pasteBtn.Enabled = true;
@@ -113,7 +119,7 @@ namespace CGProject
                 breakBtn.Enabled = false;
             }
         }
-       
+
         private bool ConvertPoints()
         {
             if (Points.Count > 1)
@@ -180,7 +186,7 @@ namespace CGProject
                 e.Graphics.DrawLines(new Pen(Color.Blue), PointsToConvert);
             }
         }
-        
+
         #region Buttons
         private void SelectBtn_Click(object sender, EventArgs e)
         {
@@ -212,11 +218,6 @@ namespace CGProject
             Points.Clear();
             label1.Text = "draw a line";
             this.CustomRefresh();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void DrawPolygonBtn_Click(object sender, EventArgs e)
@@ -263,8 +264,9 @@ namespace CGProject
         {
             FindItemToolStripMenuItem_Click(sender, e);
         }
+
         #endregion
-        
+
         #region Mouse events
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -285,14 +287,14 @@ namespace CGProject
                     }
                 case 1:
                     {
-                        foreach (IDrawable item in Items)
+                        foreach (ITransformable item in Items)
                         {
                             if (item.GetBounds().Contains(new Point(e.X, e.Y)))
                             {
                                 HelpSelectedItem = item;
-                                SelectedItem = HelpSelectedItem;
-                                label1.Text = item.GetType().Name;
-                                graphicsProcessor.SelectedItem = SelectedItem;
+                                SelectedItem = (IDrawable)HelpSelectedItem;
+                                label1.Text = item.GetType().Name + ": " + ((IDrawable)item).Name;
+                                graphicsProcessor.SelectedItem = (ITransformable)SelectedItem;
                             }
                         }
                         break;
@@ -302,7 +304,6 @@ namespace CGProject
                         GetRectPoints(e.X, e.Y);
                         IsRectOrEll = true;
                         ToggleSelection = 0;
-                        //if (Items.Count > 1) { graphicsProcessor.MouseDownEvent(e); }
                         break;
                     }
                 case 3:
@@ -310,38 +311,34 @@ namespace CGProject
                         GetRectPoints(e.X, e.Y);
                         IsRectOrEll = false;
                         ToggleSelection = 0;
-                        //if (Items.Count > 1) { graphicsProcessor.MouseDownEvent(e); }
                         break;
                     }
                 case 4:
                     {
-                        foreach (IDrawable item in Items)
+                        foreach (ITransformable item in Items)
                         {
-                            if (item is IShape)
-                            {
-                                if (((IShape)item).ContainsPoint(new Point(e.X, e.Y)))
+                                if (item.ContainsPoint(new Point(e.X, e.Y)))
                                 {
                                     HelpSelectedItem = item;
                                     if (colorDialog1.ShowDialog() == DialogResult.OK)
                                     {
                                         if (HelpSelectedItem.GetType().Name == "GroupOfItems")
                                         {
-                                            foreach (IShape x in this.groupOfItems.Items)
+                                            foreach (IDrawable x in this.groupOfItems.Items)
                                             {
-                                                ((IShape)x).SetFillColor(colorDialog1.Color);
+                                                x.SetFillColor(colorDialog1.Color);
                                                 HelpSelectedItem = null;
                                                 this.CustomRefresh();
                                             }
                                         }
                                         else
                                         {
-                                            ((IShape)HelpSelectedItem).SetFillColor(colorDialog1.Color);
+                                            ((IDrawable)HelpSelectedItem).SetFillColor(colorDialog1.Color);
                                             HelpSelectedItem = null;
                                             this.CustomRefresh();
                                         }
                                     }
                                 }
-                            }
                         }
                         ToggleSelection = 1;
                         break;
@@ -358,11 +355,11 @@ namespace CGProject
                         if ((Points.Count > 1) && (IsInRange(new Point(e.X, e.Y), PointsToConvert[0])))
                         {
                             Points.Add(new Point(PointsToConvert[0].X, PointsToConvert[0].Y));
-                            IDrawable item = new PolygonShape(new List<Point>(Points), Color.Transparent, Color.Black, 255);
+                            ITransformable item = new PolygonShape(new List<Point>(Points), Color.Transparent, Color.Black, 255, "Polygon Shape");
                             Items.Add(item);
                             ToggleSelection = 1;
-                            SelectedItem = item;
-                            graphicsProcessor.SelectedItem = SelectedItem;
+                            SelectedItem = (IDrawable)item;
+                            graphicsProcessor.SelectedItem = (ITransformable)SelectedItem;
                             Points.Clear();
                         }
                         else
@@ -428,11 +425,11 @@ namespace CGProject
                         }
                 }
 
-                if (HelpSelectedItem != null && HelpSelectedItem is ITranslatable)
+                if (HelpSelectedItem != null && HelpSelectedItem is ITransformable)
                 {
                     int dX = e.X - this.point.X;
                     int dY = e.Y - this.point.Y;
-                    ((ITranslatable)HelpSelectedItem).Translate(dX, dY);
+                    ((ITransformable)HelpSelectedItem).Translate(dX, dY);
                     this.CustomRefresh();
                 }
 
@@ -451,13 +448,13 @@ namespace CGProject
                     {
                         if (this.RectPoint1 != this.RectPoint2)
                         {
-                            IDrawable item;
+                            ITransformable item;
                             if (IsRectOrEll)
                             {
                                 item = new RectangleShape(new Size(Math.Max(RectPoint1.X, RectPoint2.X) - Math.Min(RectPoint1.X, RectPoint2.X),
                                                                     Math.Max(RectPoint1.Y, RectPoint2.Y) - Math.Min(RectPoint1.Y, RectPoint2.Y)),
                                                                     new Point(Math.Min(RectPoint1.X, RectPoint2.X),
-                                                                    Math.Min(RectPoint1.Y, RectPoint2.Y)), Color.Transparent, colorDialog1.Color, 200);
+                                                                    Math.Min(RectPoint1.Y, RectPoint2.Y)), Color.Transparent, colorDialog1.Color, 200, "Rectangle Shape");
                                 Items.Add(item);
                                 ToggleSelection = 1;
                             }
@@ -466,26 +463,26 @@ namespace CGProject
                                 item = new EllipseShape(new Size(Math.Max(RectPoint1.X, RectPoint2.X) - Math.Min(RectPoint1.X, RectPoint2.X),
                                             Math.Max(RectPoint1.Y, RectPoint2.Y) - Math.Min(RectPoint1.Y, RectPoint2.Y)),
                                             new Point(Math.Min(RectPoint1.X, RectPoint2.X),
-                                            Math.Min(RectPoint1.Y, RectPoint2.Y)), Color.Transparent, colorDialog1.Color, 200);
+                                            Math.Min(RectPoint1.Y, RectPoint2.Y)), Color.Transparent, colorDialog1.Color, 200, "Ellipse Shape");
                                 Items.Add(item);
                                 ToggleSelection = 1;
                             }
 
                             this.GetRectPoints(e.X, e.Y);
-                            SelectedItem = item;
-                            graphicsProcessor.SelectedItem = SelectedItem;
+                            SelectedItem = (IDrawable)item;
+                            graphicsProcessor.SelectedItem = (ITransformable)SelectedItem;
                             this.CustomRefresh();
                         }
                         break;
                     }
                 case 5:
                     {
-                        LineShape item = new LineShape(Points[0], new Point(e.X + 1, e.Y + 1), colorDialog1.Color, 255);
+                        LineShape item = new LineShape(Points[0], new Point(e.X + 1, e.Y + 1), colorDialog1.Color, 255, "Line Shape");
                         Items.Add(item);
                         Points.Clear();
                         ToggleSelection = 1;
                         SelectedItem = item;
-                        graphicsProcessor.SelectedItem = SelectedItem;
+                        graphicsProcessor.SelectedItem = (ITransformable)SelectedItem;
                         this.CustomRefresh();
                         break;
                     }
@@ -496,14 +493,14 @@ namespace CGProject
                     }
                 case 7:
                     {
-                        IDrawable item;
+                        ITransformable item;
                         if (Points.Count > 1)
                         {
-                            item = new CurveShape(new List<Point>(Points), colorDialog1.Color, 255);
+                            item = new CurveShape(new List<Point>(Points), colorDialog1.Color, 255, "Curve Shape");
                             Items.Add(item);
                             ToggleSelection = 1;
-                            SelectedItem = item;
-                            graphicsProcessor.SelectedItem = SelectedItem;
+                            SelectedItem = (IDrawable)item;
+                            graphicsProcessor.SelectedItem = (ITransformable)SelectedItem;
                         }
 
                         Points.Clear();
@@ -545,8 +542,8 @@ namespace CGProject
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(openFileDialog1.FileName, FileMode.Open, FileAccess.Read, FileShare.None);
-            Items = (List<IDrawable>)formatter.Deserialize(stream);
-            foreach(IDrawable item in this.Items)
+            Items = (List<ITransformable>)formatter.Deserialize(stream);
+            foreach (ITransformable item in this.Items)
             {
                 if (item.GetType().Name == "GroupOfItems")
                 {
@@ -568,17 +565,24 @@ namespace CGProject
             {
                 saveFileDialog1.ShowDialog();
             }
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(saveFileDialog1.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
-            formatter.Serialize(stream, Items);
-            stream.Close();
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                FileStream stream = new FileStream(saveFileDialog1.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, Items);
+            }
+            catch
+            {
+
+            }
         }
 
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Items = new List<IDrawable>();
+            this.Items = new List<ITransformable>();
             this.SelectedItem = null;
             this.groupOfItems = null;
+            this.copied = null;
             graphicsProcessor = new GraphicsProcessor(HelpSelectedItem);
             openFileDialog1.FileName = String.Empty;
             saveFileDialog1.FileName = String.Empty;
@@ -596,7 +600,7 @@ namespace CGProject
             {
                 if (SelectedItem.GetType().Name != "GroupOfItems")
                 {
-                    copied = SelectedItem;
+                    copied = (ITransformable)SelectedItem;
                 }
                 else
                 {
@@ -618,8 +622,8 @@ namespace CGProject
         {
             if (SelectedItem != null)
             {
-                IDrawable itemToDelete = SelectedItem;
-                foreach (IDrawable item in Items)
+                ITransformable itemToDelete = (ITransformable)SelectedItem;
+                foreach (ITransformable item in Items)
                 {
                     if (item == SelectedItem)
                     {
@@ -648,12 +652,12 @@ namespace CGProject
 
         private void AntonioToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            aboutAntonio.ShowDialog();
+            aboutAntonioDialog.ShowDialog();
         }
 
         private void DanielToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            aboutDaniel.ShowDialog();
+            aboutDanielDialog.ShowDialog();
         }
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -687,13 +691,27 @@ namespace CGProject
                 this.Items.Remove(tempGroup);
                 SelectedItem = null;
 
-                foreach (IDrawable item in tempGroup.Items)
+                foreach (ITransformable item in tempGroup.Items)
                 {
                     this.Items.Add(item);
                 }
                 this.graphicsProcessor.SelectedItem = this.Items.Last();
                 this.groupOfItems = null;
                 this.CustomRefresh();
+            }
+        }
+
+        private void RenameItemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SelectedItem != null)
+            {
+                this.setNameDialog = new SetName();
+                setNameDialog.form = this;
+                this.setNameDialog.Show();
+            }
+            else
+            {
+                MessageBox.Show("Please, select an item.");
             }
         }
 
@@ -704,6 +722,27 @@ namespace CGProject
         {
             switch (e.KeyData.ToString())
             {
+                case "Return":
+                    {
+                        if (SelectedItem != null && nameTextBox.Text.Trim() != String.Empty)
+                        {
+                            SelectedItem.Name = nameTextBox.Text;
+                            nameTextBox.Text = String.Empty;
+                            SelectBtn.Focus();
+                            label1.Refresh();
+                        }
+                        break;
+                    }
+                case "R, Control":
+                    {
+                        RenameItemToolStripMenuItem_Click(sender, e);
+                        break;
+                    }
+                case "O, Control":
+                    {
+                        OpenToolStripMenuItem_Click(sender, e);
+                        break;
+                    }
                 case "N, Control":
                     {
                         NewToolStripMenuItem_Click(sender, e);
@@ -719,7 +758,7 @@ namespace CGProject
                         SaveAsToolStripMenuItem_Click(sender, e);
                         break;
                     }
-                case "M":
+                case "M, Control":
                     {
                         colorDialog1.ShowDialog();
                         break;
@@ -739,12 +778,12 @@ namespace CGProject
                         DeleteToolStripMenuItem_Click(sender, e);
                         break;
                     }
-                case "B":
+                case "B, Control":
                     {
                         BreakToolStripMenuItem_Click(sender, e);
                         break;
                     }
-                case "G":
+                case "G, Control":
                     {
                         GroupToolStripMenuItem_Click(sender, e);
                         break;
@@ -756,36 +795,36 @@ namespace CGProject
                     }
                 case "NumPad8":
                     {
-                        if (SelectedItem != null && SelectedItem is ITranslatable)
+                        if (SelectedItem != null && SelectedItem is ITransformable)
                         {
-                            ((ITranslatable)SelectedItem).Translate(0, -20);
+                            ((ITransformable)SelectedItem).Translate(0, -20);
                             this.CustomRefresh();
                         }
                         break;
                     }
                 case "NumPad2":
                     {
-                        if (SelectedItem != null && SelectedItem is ITranslatable)
+                        if (SelectedItem != null && SelectedItem is ITransformable)
                         {
-                            ((ITranslatable)SelectedItem).Translate(0, 20);
+                            ((ITransformable)SelectedItem).Translate(0, 20);
                             this.CustomRefresh();
                         }
                         break;
                     }
                 case "NumPad4":
                     {
-                        if (SelectedItem != null && SelectedItem is ITranslatable)
+                        if (SelectedItem != null && SelectedItem is ITransformable)
                         {
-                            ((ITranslatable)SelectedItem).Translate(-20, 0);
+                            ((ITransformable)SelectedItem).Translate(-20, 0);
                             this.CustomRefresh();
                         }
                         break;
                     }
                 case "NumPad6":
                     {
-                        if (SelectedItem != null && SelectedItem is ITranslatable)
+                        if (SelectedItem != null && SelectedItem is ITransformable)
                         {
-                            ((ITranslatable)SelectedItem).Translate(20, 0);
+                            ((ITransformable)SelectedItem).Translate(20, 0);
                             this.CustomRefresh();
                         }
                         break;
@@ -793,5 +832,6 @@ namespace CGProject
             }
         }
         #endregion
+
     }
 }

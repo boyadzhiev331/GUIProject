@@ -15,14 +15,16 @@ namespace CGProject.Shapes
         public Point Location { get; set; }
         public Color Color { get; set; }
         public int Opacity { get; set; }
+        public string Name { get; set; }
         public MyMatrix AMatrix { get; set; }
 
-        public BaseShape(Size size, Point location, Color color, int opacity)
+        public BaseShape(Size size, Point location, Color color, int opacity, string name)
         {
             this.Size = size;
             this.Location = location;
             this.Color = color;
             this.Opacity = opacity;
+            this.Name = name;
             AMatrix = new MyMatrix();
         }
 

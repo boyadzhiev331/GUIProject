@@ -11,20 +11,22 @@ using System.Threading.Tasks;
 namespace CGProject.Shapes
 {
     [Serializable]
-    public class PolygonShape : IDrawable, ITranslatable, IShape, ITransformable
+    public class PolygonShape : IDrawable, ITransformable
     {
         public List<Point> Points { get; set; }
         public Color Color { get; set; }
         public Color BorderColor { get; set; }
         public int Opacity { get; set; }
+        public string Name { get; set; }
         public MyMatrix AMatrix { get; set; }
 
-        public PolygonShape(List<Point> points, Color color, Color borderClr, int opacity)
+        public PolygonShape(List<Point> points, Color color, Color borderClr, int opacity, string name)
         {
             this.Points = points;
             this.Color = color;
             this.BorderColor = borderClr;
             this.Opacity = opacity;
+            this.Name = name;
             this.AMatrix = new MyMatrix();
         }
 
@@ -226,9 +228,9 @@ namespace CGProject.Shapes
             return this.Opacity;
         }
 
-        public IDrawable CloneShape()
+        public ITransformable CloneShape()
         {
-            PolygonShape item = new PolygonShape(Points, Color, BorderColor, Opacity);
+            PolygonShape item = new PolygonShape(Points, Color, BorderColor, Opacity, Name);
 
             Matrix _Matrix = item.AMatrix.CreateMatrix();
             _Matrix.Multiply(this.AMatrix.CreateMatrix());

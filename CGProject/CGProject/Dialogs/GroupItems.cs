@@ -24,7 +24,7 @@ namespace CGProject.Dialogs
             allItemsListBox.Items.Clear();
             groupItemsListBox.Items.Clear();
 
-            foreach (IDrawable item in this.form.Items)
+            foreach (ITransformable item in this.form.Items)
             {
                 if (item.GetType().Name != "GroupOfItems")
                 {
@@ -39,10 +39,10 @@ namespace CGProject.Dialogs
             {
                 if (this.form.groupOfItems == null)
                 {
-                    this.form.groupOfItems = new Shapes.GroupOfItems(200);
+                    this.form.groupOfItems = new Shapes.GroupOfItems(200, "Group of items");
                     this.form.Items.Add(form.groupOfItems);
                 }
-                IDrawable item = this.form.Items[allItemsListBox.SelectedIndex];
+                ITransformable item = this.form.Items[allItemsListBox.SelectedIndex];
                 this.form.Items.Remove(item);
                 allItemsListBox.Items.RemoveAt(allItemsListBox.SelectedIndex);
                 groupItemsListBox.Items.Add(item.GetType().Name);
@@ -57,9 +57,9 @@ namespace CGProject.Dialogs
         {
             if (allItemsListBox.Items.Count > 0 && allItemsListBox.SelectedIndex != -1)
             {
-                form.SelectedItem = form.Items[allItemsListBox.SelectedIndex];
+                form.SelectedItem = (IDrawable)form.Items[allItemsListBox.SelectedIndex];
                 form.ToggleSelection = 1;
-                form.graphicsProcessor.SelectedItem = form.SelectedItem;
+                form.graphicsProcessor.SelectedItem = (ITransformable)form.SelectedItem;
                 form.CustomRefresh();
             }
         }
@@ -68,7 +68,7 @@ namespace CGProject.Dialogs
         {
             if (groupItemsListBox.Items.Count > 0 && groupItemsListBox.SelectedIndex != -1)
             {
-                IDrawable item = (IDrawable)this.form.groupOfItems.Items[groupItemsListBox.SelectedIndex];
+                ITransformable item = this.form.groupOfItems.Items[groupItemsListBox.SelectedIndex];
                 groupItemsListBox.Items.RemoveAt(groupItemsListBox.SelectedIndex);
                 allItemsListBox.Items.Add(item.GetType().Name);
                 this.form.groupOfItems.Items.Remove(item);
@@ -96,7 +96,7 @@ namespace CGProject.Dialogs
         {
             if (this.form.groupOfItems != null)
             {
-                foreach (IDrawable item in this.form.groupOfItems.Items)
+                foreach (ITransformable item in this.form.groupOfItems.Items)
                 {
                     this.form.Items.Add(item);
                 }

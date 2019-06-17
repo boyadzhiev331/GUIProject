@@ -16,13 +16,12 @@ namespace CGProject.Processors
         public int Operation { get; set; }
         public int ResizeRotateNumber { get; set; }
         public Point MousePosition { get; set; }
-        public IDrawable SelectedItem { get; set; }
+        public ITransformable SelectedItem { get; set; }
         public ResizeRotateHandler ResizeRotate { get; set; }
 
         #region Constructor
-        public GraphicsProcessor(IDrawable selItem)
+        public GraphicsProcessor(ITransformable selItem)
         {
-            //this.Items = items;
             this.Operation = 0;
             this.SelectedItem = selItem;
         }
@@ -49,26 +48,6 @@ namespace CGProject.Processors
         {
             double oldAngle = GetAngle(start, new Point(start.X, center.Y), center);
             double newAngle = GetAngle(newP, new Point(newP.X, center.Y), center);
-
-            /*if (oldAngle >= 0 && newAngle >= 0)
-            {
-                if (center.X > newP.X)
-                {
-                    return newAngle - oldAngle;
-                }
-                else
-                {
-                    if (center.Y > newP.Y)
-                    {
-                        return oldAngle - newAngle;
-                    }
-                    else
-                    {
-                        return newAngle - oldAngle;
-                    }
-                }
-            }
-            return 0;*/
 
             if ((oldAngle >= 0) && (newAngle >= 0))
             {
@@ -131,7 +110,6 @@ namespace CGProject.Processors
             {
                 if (SelectedItem != null && this.ResizeRotate != null)
                 {
-                    //ResizeRotate = new ResizeRotateHandler(SelectedItem.GetBounds().Size, SelectedItem.GetBounds().Location);
                     ResizeRotateNumber = ResizeRotate.ContainsPoint(this.MousePosition);
 
                     if (ResizeRotateNumber != -1)
@@ -162,16 +140,12 @@ namespace CGProject.Processors
             {
                 case 2:
                     {
-                        //IDrawable item = (IDrawable)Items[0];
-
                         SelectedItem.ResizeShape(e.X - MousePosition.X, e.Y - MousePosition.Y, ResizeRotateNumber);
                         MousePosition = new Point(e.X, e.Y);
                         return true;
                     }
                 case 3:
                     {
-                        //IDrawable item = (IDrawable)Items[0];
-
                         if ((MousePosition.Y - e.Y) != 0)
                         {
                             float angle = (float)RotateAngle(new Point((int)MousePosition.X, (int)MousePosition.Y), new Point(e.X, e.Y), new Point(SelectedItem.GetBounds().Location.X + SelectedItem.GetBounds().Size.Width / 2, SelectedItem.GetBounds().Location.Y + SelectedItem.GetBounds().Size.Height / 2));

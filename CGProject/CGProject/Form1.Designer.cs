@@ -30,6 +30,7 @@ namespace CGProject
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.label1 = new System.Windows.Forms.Label();
@@ -38,7 +39,10 @@ namespace CGProject
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,9 +82,10 @@ namespace CGProject
             this.SelectBtn = new System.Windows.Forms.Button();
             this.DrawRectBtn = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nameTextBox = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.label10 = new System.Windows.Forms.Label();
+            this.renameItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityChangeBtn)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -94,7 +99,6 @@ namespace CGProject
             this.label1.Size = new System.Drawing.Size(126, 17);
             this.label1.TabIndex = 6;
             this.label1.Text = "nothing is selected";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // OpacityChangeBtn
             // 
@@ -160,29 +164,48 @@ namespace CGProject
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
+            // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
             this.openToolStripMenuItem.Text = "Open..";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(136, 6);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
             this.saveAsToolStripMenuItem.Text = "Save as..";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(136, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -196,7 +219,8 @@ namespace CGProject
             this.groupToolStripMenuItem,
             this.breakToolStripMenuItem,
             this.toolStripSeparator2,
-            this.findItemToolStripMenuItem});
+            this.findItemToolStripMenuItem,
+            this.renameItemToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(47, 24);
             this.editToolStripMenuItem.Text = "Edit";
@@ -204,52 +228,52 @@ namespace CGProject
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(146, 26);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItem_Click);
             // 
             // pasteToolStripMenuItem
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(146, 26);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(146, 26);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(213, 6);
             // 
             // groupToolStripMenuItem
             // 
             this.groupToolStripMenuItem.Name = "groupToolStripMenuItem";
-            this.groupToolStripMenuItem.Size = new System.Drawing.Size(146, 26);
+            this.groupToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.groupToolStripMenuItem.Text = "Group";
             this.groupToolStripMenuItem.Click += new System.EventHandler(this.GroupToolStripMenuItem_Click);
             // 
             // breakToolStripMenuItem
             // 
             this.breakToolStripMenuItem.Name = "breakToolStripMenuItem";
-            this.breakToolStripMenuItem.Size = new System.Drawing.Size(146, 26);
+            this.breakToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.breakToolStripMenuItem.Text = "Break";
             this.breakToolStripMenuItem.Click += new System.EventHandler(this.BreakToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(213, 6);
             // 
             // findItemToolStripMenuItem
             // 
             this.findItemToolStripMenuItem.Name = "findItemToolStripMenuItem";
-            this.findItemToolStripMenuItem.Size = new System.Drawing.Size(146, 26);
+            this.findItemToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.findItemToolStripMenuItem.Text = "Find item";
             this.findItemToolStripMenuItem.Click += new System.EventHandler(this.FindItemToolStripMenuItem_Click);
             // 
@@ -518,24 +542,34 @@ namespace CGProject
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
-            // saveToolStripMenuItem
+            // nameTextBox
             // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            this.nameTextBox.Location = new System.Drawing.Point(693, 69);
+            this.nameTextBox.Name = "nameTextBox";
+            this.nameTextBox.Size = new System.Drawing.Size(100, 22);
+            this.nameTextBox.TabIndex = 27;
             // 
-            // toolStripSeparator5
+            // contextMenuStrip1
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(213, 6);
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // newToolStripMenuItem
+            // label10
             // 
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.newToolStripMenuItem.Text = "New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(717, 43);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(45, 17);
+            this.label10.TabIndex = 29;
+            this.label10.Text = "Name";
+            // 
+            // renameItemToolStripMenuItem
+            // 
+            this.renameItemToolStripMenuItem.Name = "renameItemToolStripMenuItem";
+            this.renameItemToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.renameItemToolStripMenuItem.Text = "Rename item";
+            this.renameItemToolStripMenuItem.Click += new System.EventHandler(this.RenameItemToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -543,6 +577,8 @@ namespace CGProject
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1160, 539);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.nameTextBox);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -571,7 +607,7 @@ namespace CGProject
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Drawer 1.0";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
@@ -638,6 +674,10 @@ namespace CGProject
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.TextBox nameTextBox;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ToolStripMenuItem renameItemToolStripMenuItem;
     }
 }
 

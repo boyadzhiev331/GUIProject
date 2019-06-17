@@ -1,6 +1,6 @@
 ﻿namespace CGProject.Dialogs
 {
-    partial class Help
+    partial class SetName
     {
         /// <summary>
         /// Required designer variable.
@@ -28,27 +28,47 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Help));
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(106, 76);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 22);
+            this.textBox1.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(29, 28);
+            this.label1.Location = new System.Drawing.Point(135, 41);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(572, 391);
-            this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
+            this.label1.Size = new System.Drawing.Size(45, 17);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Name";
             // 
-            // Help
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(106, 133);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(100, 32);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Set Name";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            // 
+            // SetName
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(663, 428);
+            this.ClientSize = new System.Drawing.Size(325, 215);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
-            this.Name = "Help";
-            this.Text = "Help";
+            this.Controls.Add(this.textBox1);
+            this.Name = "SetName";
+            this.Text = "SetName";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -56,6 +76,8 @@
 
         #endregion
 
+        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -76,6 +76,12 @@
     <Compile Include="Dialogs\Help.Designer.cs">
       <DependentUpon>Help.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\SetName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\SetName.Designer.cs">
+      <DependentUpon>SetName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,9 +89,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IDrawable.cs" />
-    <Compile Include="Interfaces\IShape.cs" />
     <Compile Include="Interfaces\ITransformable.cs" />
-    <Compile Include="Interfaces\ITranslatable.cs" />
     <Compile Include="Processors\GraphicsProcessor.cs" />
     <Compile Include="Processors\ResizeRotateHandler.cs" />
     <Compile Include="Program.cs" />
@@ -117,6 +121,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\Help.resx">
       <DependentUpon>Help.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\SetName.resx">
+      <DependentUpon>SetName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

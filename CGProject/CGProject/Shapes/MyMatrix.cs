@@ -41,12 +41,5 @@ namespace CGProject.Shapes
             dX = transformMatrix.Elements[4];
             dY = transformMatrix.Elements[5];
         }
-
-        public void Translate(float dX, float dY)
-        {
-            Matrix transformMatrix = new Matrix(this.A11, this.A12, this.A21, this.A22, this.dX, this.dY);
-            transformMatrix.Translate(dX, dY);
-            GetElements(transformMatrix);
-        }
     }
 }

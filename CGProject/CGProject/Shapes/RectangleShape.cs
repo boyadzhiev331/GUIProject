@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 namespace CGProject.Shapes
 {
     [Serializable]
-    public class RectangleShape : BaseShape, IDrawable, IShape, ITranslatable, ITransformable
+    public class RectangleShape : BaseShape, IDrawable, ITransformable
     {
         public Color BorderColor { get; set; }
 
-        public RectangleShape(Size size, Point location, Color color, Color borderColor, int opacity) 
-            :base(size, location, color, opacity)
+        public RectangleShape(Size size, Point location, Color color, Color borderColor, int opacity, string name) 
+            :base(size, location, color, opacity, name)
         {
             this.BorderColor = borderColor;
         }
@@ -35,9 +35,9 @@ namespace CGProject.Shapes
             return this.GetBounds().Contains(point);
         }
 
-        public IDrawable CloneShape()
+        public ITransformable CloneShape()
         {
-            RectangleShape item = new RectangleShape(Size, Location, Color, BorderColor, Opacity);
+            RectangleShape item = new RectangleShape(Size, Location, Color, BorderColor, Opacity, Name);
 
             Matrix _Matrix = item.AMatrix.CreateMatrix();
             _Matrix.Multiply(this.AMatrix.CreateMatrix());

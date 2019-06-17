@@ -11,16 +11,18 @@ using System.Threading.Tasks;
 namespace CGProject.Shapes
 {
     [Serializable]
-    public class CurveShape : IShape, IDrawable, ITranslatable, ITransformable
+    public class CurveShape : IDrawable, ITransformable
     {
+        public string Name { get; set; }
         public List<Point> Points { get; set; }
         public Color Color { get; set; }
         public int Opacity { get; set; }
         public MyMatrix AMatrix { get; set; }
 
-        public CurveShape(List<Point> points, Color color, int opacity)
+        public CurveShape(List<Point> points, Color color, int opacity, string name)
         {
             this.Points = points;
+            this.Name = name;
             this.Color = color;
             this.Opacity = opacity;
             this.AMatrix = new MyMatrix();
@@ -221,9 +223,9 @@ namespace CGProject.Shapes
             return this.Opacity;
         }
 
-        public IDrawable CloneShape()
+        public ITransformable CloneShape()
         {
-            CurveShape item = new CurveShape(Points, Color, Opacity);
+            CurveShape item = new CurveShape(Points, Color, Opacity, Name);
 
             Matrix _Matrix = item.AMatrix.CreateMatrix();
             _Matrix.Multiply(this.AMatrix.CreateMatrix());

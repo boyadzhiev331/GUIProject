@@ -43,7 +43,7 @@ namespace CGProject.Dialogs
 
             foreach (IDrawable item in this.form.Items)
             {
-                this.findItemsListBox.Items.Add(item.GetType().ToString().Split('.')[2]);
+                this.findItemsListBox.Items.Add(item.Name);
             }
         }
 
@@ -51,9 +51,9 @@ namespace CGProject.Dialogs
         {
             if (findItemsListBox.SelectedIndex > -1)
             {
-                form.SelectedItem = form.Items[findItemsListBox.SelectedIndex];
+                form.SelectedItem = (IDrawable)form.Items[findItemsListBox.SelectedIndex];
                 form.ToggleSelection = 1;
-                form.graphicsProcessor.SelectedItem = form.SelectedItem;
+                form.graphicsProcessor.SelectedItem = (ITransformable)form.SelectedItem;
                 form.CustomRefresh();
             }
         }
